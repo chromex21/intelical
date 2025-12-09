@@ -2,7 +2,6 @@
 demo.html
 
 # Build artifacts
-dist/
 build/
 node_modules/
 
