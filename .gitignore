@@ -1,7 +1,7 @@
 # Demo and documentation files
 demo.html
 
-# Build artifacts
+# Build artifacts (dist/ is committed for GitHub Pages)
 build/
 node_modules/
 
