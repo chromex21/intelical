@@ -71,6 +71,19 @@ const Intelical = () => {
     ));
   };
 
+  // Constants
+  const MILLISECONDS_PER_DAY = 1000 * 60 * 60 * 24;
+
+  // Helper function for category totals
+  const getCategoryTotals = (bills) => {
+    return bills.reduce((acc, bill) => {
+      const cat = bill.category || 'Uncategorized';
+      if (!acc[cat]) acc[cat] = 0;
+      acc[cat] += Number(bill.amount);
+      return acc;
+    }, {});
+  };
+
   // Navigation Component
   const Navigation = () => (
     <nav className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-2xl">
@@ -166,9 +179,13 @@ const Intelical = () => {
               <input
                 type="date"
                 value={formData.date}
+                max={formData.type === 'period' ? new Date().toISOString().split('T')[0] : undefined}
                 onChange={(e) => setFormData({...formData, date: e.target.value})}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
               />
+              {formData.type === 'period' && (
+                <p className="text-xs text-gray-500 mt-1">Period entries cannot be in the future</p>
+              )}
             </div>
             {(formData.type === 'bill' || formData.type === 'income') && (
               <>
@@ -252,16 +269,14 @@ const Intelical = () => {
       setCurrentDate(newDate);
     };
 
-    // Quick stats
-    const todayTasks = tasks.filter(t => {
-      const today = new Date();
-      const taskDate = new Date(t.date + 'T00:00:00');
-      return taskDate.toDateString() === today.toDateString();
-    });
-    const upcomingTasks = tasks.filter(t => {
-      const taskDate = new Date(t.date + 'T00:00:00');
-      return taskDate > new Date() && taskDate <= new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-    });
+    // Quick stats - optimized with string comparison
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    const todayTasks = tasks.filter(t => t.date === todayStr);
+    
+    const nextWeek = new Date(Date.now() + 7 * MILLISECONDS_PER_DAY);
+    const nextWeekStr = `${nextWeek.getFullYear()}-${String(nextWeek.getMonth() + 1).padStart(2, '0')}-${String(nextWeek.getDate()).padStart(2, '0')}`;
+    const upcomingTasks = tasks.filter(t => t.date > todayStr && t.date <= nextWeekStr);
 
     return (
       <div className="max-w-7xl mx-auto p-6">
@@ -654,7 +669,7 @@ const Intelical = () => {
       const dates = periods.map(p => new Date(p.date));
       const gaps = [];
       for (let i = 0; i < dates.length - 1; i++) {
-        const gap = Math.floor((dates[i] - dates[i + 1]) / (1000 * 60 * 60 * 24));
+        const gap = Math.floor((dates[i] - dates[i + 1]) / MILLISECONDS_PER_DAY);
         if (gap > 0) gaps.push(gap);
       }
       return gaps.length > 0 ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : null;
@@ -662,7 +677,7 @@ const Intelical = () => {
 
     const avgCycle = calculateCycle();
     const lastPeriod = periods.length > 0 ? new Date(periods[0].date) : null;
-    const nextPredicted = lastPeriod && avgCycle ? new Date(lastPeriod.getTime() + avgCycle * 24 * 60 * 60 * 1000) : null;
+    const nextPredicted = lastPeriod && avgCycle ? new Date(lastPeriod.getTime() + avgCycle * MILLISECONDS_PER_DAY) : null;
 
     return (
       <div className="max-w-7xl mx-auto p-6">
@@ -710,12 +725,7 @@ const Intelical = () => {
               <span>Spending by Category</span>
             </h3>
             <div className="space-y-3">
-              {Object.entries(bills.reduce((acc, bill) => {
-                const cat = bill.category || 'Uncategorized';
-                if (!acc[cat]) acc[cat] = 0;
-                acc[cat] += Number(bill.amount);
-                return acc;
-              }, {})).map(([category, amount]) => {
+              {Object.entries(getCategoryTotals(bills)).map(([category, amount]) => {
                 const percentage = totalBills > 0 ? (Number(amount) / totalBills * 100).toFixed(1) : 0;
                 return (
                   <div key={category} className="space-y-1">
@@ -749,7 +759,7 @@ const Intelical = () => {
                     {lastPeriod.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                   </p>
                   <p className="text-xs text-gray-500 mt-1">
-                    {Math.floor((new Date() - lastPeriod) / (1000 * 60 * 60 * 24))} days ago
+                    {Math.floor((new Date() - lastPeriod) / MILLISECONDS_PER_DAY)} days ago
                   </p>
                 </div>
                 {avgCycle && (
@@ -765,7 +775,7 @@ const Intelical = () => {
                           {nextPredicted.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                         </p>
                         <p className="text-xs text-gray-500 mt-1">
-                          In {Math.ceil((nextPredicted - new Date()) / (1000 * 60 * 60 * 24))} days
+                          In {Math.ceil((nextPredicted - new Date()) / MILLISECONDS_PER_DAY)} days
                         </p>
                       </div>
                     )}

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intelical - Smart Life Planner</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel" data-type="module">
+        // Lucide icons as inline SVG components for demo
+        const Calendar = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+            </svg>
+        );
+
+        const DollarSign = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <line x1="12" y1="1" x2="12" y2="23"></line>
+                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+        );
+
+        const BarChart3 = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <line x1="18" y1="20" x2="18" y2="10"></line>
+                <line x1="12" y1="20" x2="12" y2="4"></line>
+                <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+        );
+
+        const User = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+        );
+
+        const Settings = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M12 1v6m0 6v6m5.196-14.196l-4.242 4.242m0 5.656l-4.242 4.242M23 12h-6m-6 0H1m14.196 5.196l-4.242-4.242m0-5.656L6.804 2.804"></path>
+            </svg>
+        );
+
+        const Plus = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+        );
+
+        const Edit2 = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+            </svg>
+        );
+
+        const Trash2 = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+        );
+
+        const CheckCircle = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        );
+
+        const AlertCircle = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+        );
+
+        const FileText = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+                <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+        );
+
+        const Heart = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+        );
+
+        const TrendingUp = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                <polyline points="17 6 23 6 23 12"></polyline>
+            </svg>
+        );
+
+        const Activity = ({ className }) => (
+            <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+        );
+
+        // Now load the component - we'll paste a simplified version inline
+        const Intelical = () => {
+            const [currentPage, setCurrentPage] = React.useState('home');
+
+            return (
+                <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50">
+                    <nav className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-2xl">
+                        <div className="max-w-7xl mx-auto px-4">
+                            <div className="flex items-center justify-between h-16">
+                                <div className="flex items-center space-x-3">
+                                    <div className="bg-white bg-opacity-20 p-2 rounded-lg backdrop-blur-sm">
+                                        <Activity className="w-8 h-8" />
+                                    </div>
+                                    <div>
+                                        <span className="text-2xl font-bold tracking-tight">Intelical</span>
+                                        <p className="text-xs text-white text-opacity-90">Smart Life Planner</p>
+                                    </div>
+                                </div>
+                                <div className="flex space-x-2">
+                                    {[
+                                        { id: 'home', icon: Calendar, label: 'Calendar' },
+                                        { id: 'dashboard', icon: FileText, label: 'Tasks' },
+                                        { id: 'analytics', icon: BarChart3, label: 'Analytics' },
+                                        { id: 'profile', icon: User, label: 'Profile' },
+                                        { id: 'settings', icon: Settings, label: 'Settings' }
+                                    ].map(item => (
+                                        <button
+                                            key={item.id}
+                                            onClick={() => setCurrentPage(item.id)}
+                                            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all transform hover:scale-105 ${
+                                                currentPage === item.id 
+                                                    ? 'bg-white text-blue-600 shadow-lg font-semibold' 
+                                                    : 'hover:bg-white hover:bg-opacity-20 backdrop-blur-sm'
+                                            }`}
+                                        >
+                                            <item.icon className="w-5 h-5" />
+                                            <span className="hidden md:inline">{item.label}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                    </nav>
+                    
+                    <div className="max-w-7xl mx-auto p-6">
+                        <div className="bg-white rounded-2xl shadow-2xl p-8">
+                            <h1 className="text-4xl font-bold text-gray-800 mb-4">
+                                Welcome to Intelical! 🎉
+                            </h1>
+                            <p className="text-xl text-gray-600 mb-6">
+                                Your all-in-one smart life planner for tracking everything that matters.
+                            </p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                                <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-6 border-2 border-blue-200">
+                                    <Calendar className="w-12 h-12 text-blue-600 mb-3" />
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Smart Calendar</h3>
+                                    <p className="text-gray-600">View and manage all your tasks, events, and plans in one beautiful calendar.</p>
+                                </div>
+                                
+                                <div className="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200">
+                                    <DollarSign className="w-12 h-12 text-green-600 mb-3" />
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Finance Tracking</h3>
+                                    <p className="text-gray-600">Track your income, expenses, and bills with detailed analytics.</p>
+                                </div>
+                                
+                                <div className="bg-gradient-to-br from-pink-50 to-pink-100 rounded-xl p-6 border-2 border-pink-200">
+                                    <Heart className="w-12 h-12 text-pink-600 mb-3" />
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Period Tracking</h3>
+                                    <p className="text-gray-600">Track your menstrual cycle with predictions and insights.</p>
+                                </div>
+                                
+                                <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border-2 border-purple-200">
+                                    <FileText className="w-12 h-12 text-purple-600 mb-3" />
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Task Management</h3>
+                                    <p className="text-gray-600">Create, organize, and complete tasks with ease.</p>
+                                </div>
+                                
+                                <div className="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-6 border-2 border-yellow-200">
+                                    <BarChart3 className="w-12 h-12 text-yellow-600 mb-3" />
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Analytics Dashboard</h3>
+                                    <p className="text-gray-600">Get insights into your spending, habits, and progress.</p>
+                                </div>
+                                
+                                <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-6 border-2 border-indigo-200">
+                                    <User className="w-12 h-12 text-indigo-600 mb-3" />
+                                    <h3 className="text-xl font-bold text-gray-800 mb-2">Profile Management</h3>
+                                    <p className="text-gray-600">Manage your personal info and income streams.</p>
+                                </div>
+                            </div>
+
+                            <div className="mt-10 p-6 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl text-white">
+                                <h3 className="text-2xl font-bold mb-3">✨ New Features Added</h3>
+                                <ul className="space-y-2">
+                                    <li className="flex items-start space-x-2">
+                                        <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                                        <span><strong>Period Tracking:</strong> Complete menstrual cycle tracking with predictions</span>
+                                    </li>
+                                    <li className="flex items-start space-x-2">
+                                        <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                                        <span><strong>Enhanced UI:</strong> Beautiful gradients, better colors, and smooth animations</span>
+                                    </li>
+                                    <li className="flex items-start space-x-2">
+                                        <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                                        <span><strong>Event Support:</strong> Track special events alongside tasks and bills</span>
+                                    </li>
+                                    <li className="flex items-start space-x-2">
+                                        <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                                        <span><strong>Better Analytics:</strong> Visual progress bars and comprehensive insights</span>
+                                    </li>
+                                    <li className="flex items-start space-x-2">
+                                        <CheckCircle className="w-5 h-5 mt-0.5 flex-shrink-0" />
+                                        <span><strong>Improved Settings:</strong> Toggle notifications and customize your experience</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<Intelical />);
+    </script>
+</body>
+</html>
