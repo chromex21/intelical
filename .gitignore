@@ -1,0 +1,15 @@
+# Demo and documentation files
+demo.html
+
+# Build artifacts
+dist/
+build/
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
